@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='Pysis',
-    version='0.3.1',
+    version='0.4.0b0',
     author='William Trevor Olson',
     author_email='wtolson@gmail.com',
-    packages=[
-        'pysis',
-        'pysis.binning',
-        'pysis.util'
-    ],
+    packages=find_packages(),
     scripts=[],
     url='https://github.com/wtolson/Pysis',
     license='LICENSE.txt',
