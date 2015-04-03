@@ -20,6 +20,7 @@
 """
 A pythonic syntax for calling Isis commands.
 """
+from __future__ import print_function
 import os
 from os import path
 from subprocess import call, check_output
@@ -54,7 +55,7 @@ class IsisCommand(object):
         return check_output(cmd)
 
     def print_cmd(self, **kwargs):
-        print ' '.join(self.get_cmd(**kwargs))
+        print(' '.join(self.get_cmd(**kwargs)))
 
     def __call__(self, **kwargs):
         return self.call(**kwargs)
