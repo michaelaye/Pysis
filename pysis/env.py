@@ -3,8 +3,12 @@
 import os
 from os import path
 from functools import wraps
+import logging
+import warnings
 
 from .exceptions import VersionError
+
+logger = logging.getLogger(__name__)
 
 __all__ = [
     'ISIS_ROOT',
@@ -19,7 +23,7 @@ __all__ = [
 ISIS_ROOT = os.environ.setdefault('ISISROOT', '/usgs/pkgs/isis3/isis')
 try:
     with open(path.join(ISIS_ROOT, 'version')) as _f:
-        ISIS_VERSION = _f.readline().strip()
+        ISIS_VERSION = _f.readline().split('#')[0].strip()
 
     ISIS_VERISON_TUPLE = tuple(map(int, ISIS_VERSION.split('.')))
 
@@ -60,11 +64,12 @@ if ISIS_VERSION_MAJOR == 3:
     os.environ['QT_PLUGIN_PATH'] = QT_PLUGIN_PATH
 
 else:
+    warnings.warn("Not major version == 3", RuntimeWarning)
     ISIS_DATA = None
     ISIS_TEST_DATA = None
     ISIS_PATH = None
     QT_PLUGIN_PATH = None
-
+    logger.warning("Most variables set to NONE b/c major version isn't = 3")
 
 def check_isis_version(major, minor=0, patch=0, build=0):
     """Checks that the current isis version is equal to or above the suplied
