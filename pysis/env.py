@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-from os import path
 from functools import wraps
+from os import path
+from pathlib import Path
+
+import toml
 
 from .exceptions import VersionError
 
@@ -15,7 +18,12 @@ __all__ = [
     'require_isis_version'
 ]
 
-ISIS_ROOT = os.environ.setdefault('ISISROOT', '/usgs/pkgs/isis3/isis')
+configfile = Path.home() / ".isisroot.toml"
+config = toml.load(configfile)
+
+ISIS_ROOT = config.get('ISISROOT', '/usgs/pkgs/isis3/install')
+os.environ["ISISROOT"] = ISIS_ROOT
+# ISIS_ROOT = os.environ.setdefault('ISISROOT', '/usgs/pkgs/isis3/install')
 try:
     with open(path.join(ISIS_ROOT, 'version')) as _f:
         ISIS_VERSION = _f.readline().split('#')[0].strip()
@@ -37,7 +45,7 @@ if ISIS_VERSION_MAJOR == 3:
     # Check for the ISIS3DATA directory. If it does not exist use a default
     ISIS_DATA = path.normpath(path.join(ISIS_ROOT, '../data'))
     if not path.exists(ISIS_DATA):
-        ISIS_DATA = '/usgs/cpkgs/isis3/data'
+        ISIS_DATA = config.get('ISIS3DATA', '/usgs/cpkgs/isis3/data')
     os.environ['ISIS3DATA'] = ISIS_DATA
 
     # Check for the ISIS3TESTDATA directory. If it does not exist use a default
